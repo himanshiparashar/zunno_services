@@ -1,0 +1,44 @@
+name: Deploy Flask App to EC2
+
+on:
+  push:
+    branches:
+      - prod   # change to prod if needed
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    env:
+      HOST: ${{ vars.HOST }}
+      USER: ${{ vars.USER }}
+      KEY:  ${{ secrets.KEY }}   # Keep private key in secrets (not in vars!)
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Install SSH client
+        run: sudo apt-get update && sudo apt-get install -y openssh-client
+
+      - name: Setup SSH key
+        run: |
+          mkdir -p ~/.ssh
+          echo "$KEY" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+
+      - name: Copy project files to EC2
+        run: |
+          scp -i ~/.ssh/id_rsa -r ./ $USER@$HOST:/home/$USER/zunno_services
+
+      - name: Deploy on EC2
+        run: |
+          ssh -i ~/.ssh/id_rsa $USER@$HOST << 'EOF'
+          cd /home/$USER/flaskapp
+          python3 -m venv venv || true
+          source venv/bin/activate
+          pip install -r requirements.txt
+          pkill gunicorn 
+          gunicorn -w 3 -b 0.0.0.0:8000 app:app --daemon
+          sudo systemctl restart nginx
+          EOF
