@@ -11,6 +11,7 @@ requests>=2.31.0
 
 # LLM Integration (assuming langchain_zunno is available)
 langchain_zunno
+gunicorn
 
 # Standard libraries (usually included with Python)
 # json, re, typing, logging, datetime, pathlib, argparse, sys, os
