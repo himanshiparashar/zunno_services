@@ -25,24 +25,15 @@ jobs:
           mkdir -p ~/.ssh
           echo "$KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -v -H $HOST >> ~/.ssh/known_hosts
-          echo "===== SSH KEY SETUP COMPLETE ====="
-          ls -lah ~/.ssh
-
-      - name: Test SSH connection
-        run: |
-          echo "===== TESTING SSH CONNECTION TO $USER@$HOST ====="
-          ssh -vvv -i ~/.ssh/id_rsa $USER@$HOST "echo 'SSH connection successful!'"
+          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 
       - name: Copy project files to EC2
         run: |
-          echo "===== COPYING FILES TO EC2 ====="
-          scp -vvv -i ~/.ssh/id_rsa -r ./ $USER@$HOST:/home/$USER/zunno_services
+          scp -i ~/.ssh/id_rsa -r ./ $USER@$HOST:/home/$USER/zunno_services
 
       - name: Deploy on EC2
         run: |
-          echo "===== RUNNING DEPLOYMENT ON EC2 ====="
-          ssh -vvv -i ~/.ssh/id_rsa $USER@$HOST << 'EOF'
+          ssh -i ~/.ssh/id_rsa $USER@$HOST << 'EOF'
           cd /home/$USER/zunno_services
           python3 -m venv venv || true
           source venv/bin/activate
