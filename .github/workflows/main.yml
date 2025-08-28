@@ -3,15 +3,15 @@ name: Deploy Flask App to EC2
 on:
   push:
     branches:
-      - prod   # change to prod if needed
+      - prod
 
 jobs:
   deploy:
     runs-on: ubuntu-latest
     env:
-      HOST: ${{ vars.HOST }}
-      USER: ${{ vars.USER }}
-      KEY:  ${{ secrets.KEY }}   # Keep private key in secrets (not in vars!)
+      HOST: ${{ secrets.HOST }}
+      USER: ${{ secrets.USER }}
+      KEY:  ${{ secrets.KEY }}
 
     steps:
       - name: Checkout repo
@@ -25,20 +25,29 @@ jobs:
           mkdir -p ~/.ssh
           echo "$KEY" > ~/.ssh/id_rsa
           chmod 600 ~/.ssh/id_rsa
-          ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
+          ssh-keyscan -v -H $HOST >> ~/.ssh/known_hosts
+          echo "===== SSH KEY SETUP COMPLETE ====="
+          ls -lah ~/.ssh
+
+      - name: Test SSH connection
+        run: |
+          echo "===== TESTING SSH CONNECTION TO $USER@$HOST ====="
+          ssh -vvv -i ~/.ssh/id_rsa $USER@$HOST "echo 'SSH connection successful!'"
 
       - name: Copy project files to EC2
         run: |
-          scp -i ~/.ssh/id_rsa -r ./ $USER@$HOST:/home/$USER/zunno_services
+          echo "===== COPYING FILES TO EC2 ====="
+          scp -vvv -i ~/.ssh/id_rsa -r ./ $USER@$HOST:/home/$USER/zunno_services
 
       - name: Deploy on EC2
         run: |
-          ssh -i ~/.ssh/id_rsa $USER@$HOST << 'EOF'
-          cd /home/$USER/flaskapp
+          echo "===== RUNNING DEPLOYMENT ON EC2 ====="
+          ssh -vvv -i ~/.ssh/id_rsa $USER@$HOST << 'EOF'
+          cd /home/$USER/zunno_services
           python3 -m venv venv || true
           source venv/bin/activate
           pip install -r requirements.txt
-          pkill gunicorn 
+          pkill gunicorn || true
           gunicorn -w 3 -b 0.0.0.0:8000 app:app --daemon
           sudo systemctl restart nginx
           EOF
