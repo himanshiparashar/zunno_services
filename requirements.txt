@@ -1,0 +1,16 @@
+# File Processing
+pypdf>=3.17.0
+python-docx>=0.8.11
+
+# Web Framework
+Flask>=2.3.0
+Werkzeug>=2.3.0
+
+# HTTP Client (for testing)
+requests>=2.31.0
+
+# LLM Integration (assuming langchain_zunno is available)
+langchain_zunno
+
+# Standard libraries (usually included with Python)
+# json, re, typing, logging, datetime, pathlib, argparse, sys, os
