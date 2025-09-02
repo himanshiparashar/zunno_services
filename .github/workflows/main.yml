@@ -12,6 +12,7 @@ jobs:
       HOST: ${{ secrets.HOST }}
       USER: ${{ secrets.USER }}
       KEY:  ${{ secrets.KEY }}
+      
 
     steps:
       - name: Checkout repo
