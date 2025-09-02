@@ -130,37 +130,41 @@ def create_extraction_prompt(text: str) -> str:
     Returns:
         str: Formatted prompt for the LLM
     """
-    prompt = f"""
-    You are a data extraction specialist. Extract RFQ (Request for Quotation) information from the following text.
-    
-    TEXT TO ANALYZE:
-    {text}  # Limit text length for LLM processing
-    
-    INSTRUCTIONS:
-    1. Analyze the text carefully to identify RFQ information
-    2. Extract the following fields if available:
-       - rfq_number: Request for Quotation number
-       - rfq_date: Date of the RFQ
-       - company_name: Company name
-       - contact_person: Contact person name
-       - email: Contact email
-       - phone: Contact phone
-       - project_title: Project title
-       - project_description: Project description
-       - required_services: Array of required services
-       - budget_range: Budget range
-       - deadline: Submission deadline
-       - technical_requirements: Array of technical requirements
-       - evaluation_criteria: Array of evaluation criteria
-       - submission_instructions: Submission instructions
-    
-    3. If a field is not found, use null
-    4. Return ONLY valid JSON that matches the schema exactly
-    5. Do not include any explanations or additional text
-    
-    RESPONSE FORMAT:
-    Return only the JSON object, no other text.
-    """
+    prompt = """
+You are an expert data extraction assistant. Your task is to analyze the text from a document and convert it into a structured JSON object that matches the requested schema exactly.
+
+Your response MUST be ONLY a single, valid JSON object. Do not include any other text, markdown, or explanations.
+
+Extract buyer, buyer address, buyer GSTIN, items, payment terms, and delivery terms 
+from the provided text.  
+
+Return only valid JSON in the exact schema:
+
+{{
+  "buyer": "",
+  "buyer_address": "",
+  "buyer_gstin": "",
+  "items": [
+    {{
+      "item_name": "",
+      "specification": "",
+      "quantity": "",
+      "unit": "",
+      "rate": "",
+      "delivery_date": "",
+      "remark": ""
+    }}
+  ],
+  "payment_terms": "",
+  "delivery_terms": ""
+}}
+
+Now, analyze the following text and generate the corresponding JSON object with the extracted data.
+
+--- PDF TEXT START ---
+{text}
+--- PDF TEXT END ---
+"""
     
     return prompt
 
