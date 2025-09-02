@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - prod
-      
 
 jobs:
   deploy:
@@ -28,6 +27,10 @@ jobs:
           chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H $HOST >> ~/.ssh/known_hosts
 
+      - name: Remove old project folder
+        run: |
+          ssh -i ~/.ssh/id_rsa $USER@$HOST "rm -rf /home/$USER/zunno_services"
+
       - name: Copy project files to EC2
         run: |
           scp -i ~/.ssh/id_rsa -r ./ $USER@$HOST:/home/$USER/zunno_services
@@ -42,4 +45,4 @@ jobs:
           pkill gunicorn || true
           gunicorn -w 3 -b 0.0.0.0:8000 app:app --daemon
           sudo systemctl restart nginx
-          
+          EOF
