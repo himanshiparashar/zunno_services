@@ -134,7 +134,7 @@ def create_extraction_prompt(text: str) -> str:
     You are a data extraction specialist. Extract RFQ (Request for Quotation) information from the following text.
     
     TEXT TO ANALYZE:
-    {text[:4000]}  # Limit text length for LLM processing
+    {text}  # Limit text length for LLM processing
     
     INSTRUCTIONS:
     1. Analyze the text carefully to identify RFQ information

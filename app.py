@@ -17,8 +17,8 @@ app.config['MAX_CONTENT_LENGTH'] = 5 * 1024 * 1024  # 50MB max file size
 app.config['UPLOAD_FOLDER'] = tempfile.gettempdir()
 app.config['ALLOWED_EXTENSIONS'] = {'pdf', 'doc', 'docx', 'txt'}
 # Register both blueprints
-app.register_blueprint(aksum_blueprint, url_prefix="/aksum")
-app.register_blueprint(jd_blueprint, url_prefix="/jd")
+# app.register_blueprint(aksum_blueprint, url_prefix="/aksum")
+# app.register_blueprint(jd_blueprint, url_prefix="/jd")
 
 def allowed_file(filename):
     """Check if the file extension is allowed."""
