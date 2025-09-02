@@ -38,7 +38,7 @@ def index():
     """Serve the upload form."""
     return render_template('index.html')
 
-@app.route('/extract', methods=['POST'])
+@app.route('/aksum/extract', methods=['POST'])
 def extract_rfq():
     """
     Extract RFQ data from uploaded file.
