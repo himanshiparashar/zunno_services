@@ -133,7 +133,6 @@ def create_extraction_prompt(text: str) -> str:
     format={
   "buyer": "",
   "buyer_address": "",
-  "buyer_gstin": "",
   "items": [
     {
       "item_name": "",
@@ -141,10 +140,10 @@ def create_extraction_prompt(text: str) -> str:
       "quantity": "",
       "unit": "",
       "rate": "",
-      "delivery_date": "",
       "remark": ""
     }
   ],
+  "delivery_date": "",
   "payment_terms": "",
   "delivery_terms": ""
 }
