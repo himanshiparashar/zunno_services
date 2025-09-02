@@ -130,7 +130,26 @@ def create_extraction_prompt(text: str) -> str:
     Returns:
         str: Formatted prompt for the LLM
     """
-    prompt = """
+    format={
+  "buyer": "",
+  "buyer_address": "",
+  "buyer_gstin": "",
+  "items": [
+    {
+      "item_name": "",
+      "specification": "",
+      "quantity": "",
+      "unit": "",
+      "rate": "",
+      "delivery_date": "",
+      "remark": ""
+    }
+  ],
+  "payment_terms": "",
+  "delivery_terms": ""
+}
+
+    prompt = f"""
 You are an expert data extraction assistant. Your task is to analyze the text from a document and convert it into a structured JSON object that matches the requested schema exactly.
 
 Your response MUST be ONLY a single, valid JSON object. Do not include any other text, markdown, or explanations.
@@ -139,25 +158,8 @@ Extract buyer, buyer address, buyer GSTIN, items, payment terms, and delivery te
 from the provided text.  
 
 Return only valid JSON in the exact schema:
+{format}
 
-{{
-  "buyer": "",
-  "buyer_address": "",
-  "buyer_gstin": "",
-  "items": [
-    {{
-      "item_name": "",
-      "specification": "",
-      "quantity": "",
-      "unit": "",
-      "rate": "",
-      "delivery_date": "",
-      "remark": ""
-    }}
-  ],
-  "payment_terms": "",
-  "delivery_terms": ""
-}}
 
 Now, analyze the following text and generate the corresponding JSON object with the extracted data.
 
