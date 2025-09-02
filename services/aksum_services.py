@@ -153,6 +153,8 @@ You are an expert data extraction assistant. Your task is to analyze the text fr
 
 Your response MUST be ONLY a single, valid JSON object. Do not include any other text, markdown, or explanations.
 
+and make sure all data in json format should be correct because this data will be used for further processing.
+
 Extract buyer, buyer address, buyer GSTIN, items, payment terms, and delivery terms 
 from the provided text.  
 
@@ -165,6 +167,7 @@ Now, analyze the following text and generate the corresponding JSON object with 
 --- PDF TEXT START ---
 {text}
 --- PDF TEXT END ---
+
 """
     
     return prompt
